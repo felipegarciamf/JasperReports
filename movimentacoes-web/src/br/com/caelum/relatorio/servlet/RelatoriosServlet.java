@@ -41,7 +41,7 @@ public class RelatoriosServlet extends HttpServlet {
 		String dataIni = request.getParameter("data_ini");
 		String dataFim = request.getParameter("data_fim");
 		String tipo = request.getParameter("tipo");
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Conclusao" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="633c41a3-b4bc-4631-947b-601492087e19">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="108"/>
+	<parameter name="DATA_INI" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").parse("01/08/2012")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_FIM" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").parse("29/08/2012")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     categorias.`nome` AS categorias_nome,
+     movimentacoes.`id` AS movimentacoes_id,
+     movimentacoes.`data` AS movimentacoes_data,
+     movimentacoes.`descricao` AS movimentacoes_descricao,
+     movimentacoes.`tipoMovimentacao` AS movimentacoes_tipoMovimentacao,
+     movimentacoes.`valor` AS movimentacoes_valor,
+     contas.`titular` AS contas_titular
+FROM
+     `categorias` categorias INNER JOIN `movimentacoes` movimentacoes ON categorias.`id` = movimentacoes.`categoria_id`
+     INNER JOIN `contas` contas ON movimentacoes.`conta_id` = contas.`id`
+WHERE BETWEEN $P{DATA_INI} AND $P{DATA_FIM}
+ORDER BY
+     contas.`titular` ASC,
+     movimentacoes.`data` ASC]]>
+	</queryString>
+	<field name="categorias_nome" class="java.lang.String"/>
+	<field name="movimentacoes_id" class="java.lang.Integer"/>
+	<field name="movimentacoes_data" class="java.sql.Date"/>
+	<field name="movimentacoes_descricao" class="java.lang.String"/>
+	<field name="movimentacoes_tipoMovimentacao" class="java.lang.String"/>
+	<field name="movimentacoes_valor" class="java.math.BigDecimal"/>
+	<field name="contas_titular" class="java.lang.String"/>
+	<variable name="movimentacoes_valor_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{movimentacoes_valor}]]></variableExpression>
+	</variable>
+	<variable name="movimentacoes_valor_2" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{movimentacoes_valor}]]></variableExpression>
+	</variable>
+	<variable name="movimentacoes_valor_3" class="java.math.BigDecimal" resetType="Group" resetGroup="por_mes" calculation="Sum">
+		<variableExpression><![CDATA[$F{movimentacoes_valor}]]></variableExpression>
+	</variable>
+	<group name="contas_titular">
+		<groupExpression><![CDATA[$F{contas_titular}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<elementGroup/>
+				<textField>
+					<reportElement uuid="6aabd51c-ac1c-4056-b7d2-370870b8a050" x="179" y="16" width="199" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["CONTA DE: " + $F{contas_titular}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<group name="por_mes">
+		<groupFooter>
+			<band height="50">
+				<textField pattern="¤ #,##0.00">
+					<reportElement uuid="51554e6f-2c4d-4f55-9a68-2a2c07afa782" x="427" y="0" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{movimentacoes_valor_3}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d5328a55-d764-4f5f-b135-3edc74af15f1" x="23" y="32" width="169" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONCLUSAO DE TESTE]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement uuid="772c8771-d07a-4072-8bcf-f0650e981546" x="441" y="13" width="94" height="39" backcolor="#00FF00"/>
+			</rectangle>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="4a78ab4e-1b18-41f2-8b7b-e08016c86c23" x="0" y="0" width="81" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[categorias_nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dec0171a-75b0-4946-b7cf-7f88179aa823" x="162" y="0" width="81" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[movimentacoes_data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b0c5efa0-0d10-4564-bbce-031df6a29e51" x="243" y="0" width="81" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[movimentacoes_descricao]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fc798c7a-ec07-467d-aaa2-0ea295c15ae9" x="324" y="0" width="81" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[movimentacoes_tipoMovimentacao]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6a349be2-0ce3-4781-b56c-2f37cc041dd4" x="405" y="0" width="81" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[movimentacoes_valor]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="82e32860-4e89-4f02-b42b-b843c0e7ab2b" x="486" y="3" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{contas_titular}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e9a29955-0ed7-4613-ba6f-e998c90f91d2" x="81" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[movimentacoes_id]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement uuid="3fd0a8fa-55a1-408e-8a44-1672e271b3ad" x="0" y="0" width="81" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{categorias_nome}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="27a99ea2-5af3-4a1f-9547-a41710a08238" x="162" y="0" width="81" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{movimentacoes_data}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="31b335cb-cde5-4ac5-b8ac-afcd35cb6f18" x="243" y="0" width="81" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{movimentacoes_descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="22764eb1-5991-46ea-928c-06aa0f0b44a4" x="324" y="0" width="81" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{movimentacoes_tipoMovimentacao}.substring(0 , 1)]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement uuid="4fbbeeca-a139-4971-b6bb-36053c78900a" x="405" y="0" width="81" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{movimentacoes_valor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e166541a-653f-47de-8a39-c0bca930ff8c" x="486" y="0" width="81" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{contas_titular}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a154be1a-fb2a-4101-aedc-93479b6d5e3f" x="81" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{movimentacoes_id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<textField pattern="¤ #,##0.00">
+				<reportElement uuid="0de2ebd1-b5e9-4a94-a85e-8d8653b1a6bf" x="467" y="15" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{movimentacoes_valor_2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement uuid="1044a65e-9f5e-4608-83d9-9873a4da480b" x="441" y="34" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="db0b0bf0-f9fe-47cb-baa9-0b4f2680635d" x="527" y="34" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="1f4b9fa2-6478-4d48-9edd-6b16f4ff4af1" x="10" y="34" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField pattern="¤ #,##0.00">
+				<reportElement uuid="d37bda29-4254-4dd4-a563-76987f868966" x="467" y="12" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{movimentacoes_valor_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
